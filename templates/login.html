@@ -1,0 +1,31 @@
+{% extends "ind.html" %}
+
+   {% block head %}
+      {{ super() }}
+   {% endblock %}
+
+   {% block title %}
+      Логин
+   {% endblock %}
+
+   {% block hat %}
+      {{ super() }}
+   {% endblock hat %}
+
+   {% block main %}
+      <h1>Войдите в аккаунт чтобы сыграть</h1>
+      <form action="/login" method="post" class="login">
+         <label>Логин:</label>
+            <p><input maxlength="25" name="login" class="texto"></p>
+         <label>Пароль:</label>
+            <p><input type="password" maxlength="25" name="password" class="texto"></p>
+            <p><input type="submit" value="Войти" class="btn-new"></p>
+         {% for cat, msg in get_flashed_messages(True) %}
+            <div class="flash {{cat}}">{{msg}}</div>
+         {% endfor %}
+      </form>
+   {% endblock %}
+
+   {% block footer %}
+      {{ super() }}
+   {% endblock %}

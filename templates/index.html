@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css">
+    {% endblock %}
+    <meta charset="UTF-8">
+    <title>{% block title %} Главная {% endblock %}</title>
+</head>
+<body>
+{% block hat %}
+<header class="header">
+        <div class="container">
+            <ul class="menu">
+                <li class="menu_item">
+                    <a href="/">Главная</a>
+                </li>
+                <li class="menu_item">
+                    <a href="/info">Играть</a>
+                </li>
+                <li class="menu_item">
+                    <a href="/tech">Поддержка</a>
+                </li>
+                <li class="menu_item">
+                    <a href="/login">Войти</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+{% endblock hat %}
+{% block header %}
+<header><h1 class="entrance">Добро пожаловать на сервер</h1></header>
+{% endblock %}
+{% block main %}
+<p>Незабываемые впечатления, которые вы можете разделить со своими друзьями </p>
+{% endblock %}
+{% block footer %}
+<footer class="footer">
+        <div class="container">
+            <ul class="menu">
+                <li class="menu_item">
+                    <h2>Свяжитесь с нами:</h2>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3" target="_blank">Телеграмм</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://discord.gg" target="_blank">Дискорд</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3" target="_blank">Ватцап</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3>" target="_blank">Твитер</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "ind.html" %}
+
+    {% block head %}
+        {{ super() }}
+    {% endblock %}
+    {% block title %}
+        Поддержка
+    {% endblock %}
+
+    {% block hat %}
+        {{ super() }}
+    {% endblock hat %}
+
+    {% block main %}
+        <h1>Что-то пошло не так? Свяжитесь с нами!</h1>
+        {% for cat, msg in get_flashed_messages(True) %}
+            <div class="flash {{cat}}">{{msg}}</div>
+        {% endfor %}
+        <form action="/tech" method="post" class="tech">
+            <p><label>
+                Ваше имя:
+                    <input class="texto" type="text" name="name" placeholder="Иван Иванов">
+            </label></p>
+
+            <p><label>
+                Электронная почта:
+                    <input class="texto" type="email" name="email" placeholder="example@email.com">
+            </label></p>
+            <p><label>
+                Опишите проблему:</label></p>
+                    <textarea class="text" name="comment" placeholder="Что случилось?"></textarea>
+
+            <p><button class="btn-new" type="submit"> Отправить </button></p>
+        </form>
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}

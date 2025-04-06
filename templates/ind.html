@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    {% block head %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <meta charset="UTF-8">
+    {% endblock %}
+    <title>{% block title %} Главная {% endblock %}</title>
+</head>
+
+<body>
+{% block hat %}
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <ul class="menu list-reset">
+                    <li class="menu_item">
+                        <a href="/">Главная</a>
+                    </li>
+                    <li class="menu_item">
+                        <a href="/info">Играть</a>
+                    </li>
+                    <li class="menu_item">
+                        <a href="/tech">Поддержка</a>
+                    </li>
+                    <li class="menu_item">
+                        <a href="/login">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+{% endblock hat %}
+{% block main %}
+    <main class="main">
+        <section class="hero">
+            <div class="container container__aside">
+                <div class="container__hero">
+                    <h1 class="title">Добро пожаловать на сервер</h1>
+                    <p>Незабываемые впечатления, которые вы можете разделить со своими друзьями </p>
+                </div>
+                <div class="aside">
+                    <img src="https://preview.free3d.com/img/2016/07/2374218859876975984/skuo6ybq.jpg">
+                </div>
+            </div>
+        </section>
+        <section class="about">
+            <div class="container"></div>
+        </section>
+    </main>
+<p>{{ http }}</p>
+{% endblock %}
+{% block footer %}
+    <footer class="footer">
+        <div class="container">
+            <ul class="menu list-reset">
+                <li class="menu_item">
+                    <h2 class="second-title">Свяжитесь с нами:</h2>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3" target="_blank">Телеграмм</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://discord.gg" target="_blank">Дискорд</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3" target="_blank">Ватцап</a>
+                </li>
+                <li class="menu_item">
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=CF0I29kibmnU1kt3>" target="_blank">Твитер</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+{% endblock %}
+</body>
+
+</html>
