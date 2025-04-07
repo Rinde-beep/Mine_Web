@@ -34,7 +34,7 @@ a {
     list-style: none;
 }
 .box {
-display: flex;
+    display: flex;
     flex-direction: column;
     gap: 1.052rem;
     width: 23.684rem;
@@ -42,9 +42,13 @@ display: flex;
     padding: 2.105rem;
     border: solid 1px;
     border-radius: 0.578rem;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 input {
-transition: 0.2s;
+    transition: 0.2s;
     box-sizing: border-box;
     width: 100%;
     background: var(--graphite);
@@ -53,6 +57,10 @@ transition: 0.2s;
     display: block;
     font-size: 0.947rem;
     color: var(--white);
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 .btn {
     width: fit-content;
@@ -61,7 +69,6 @@ transition: 0.2s;
     padding: 0;
     cursor: pointer;
     color: var(--color-white);
-    background: none;
 }
 
 .second-title {
@@ -144,6 +151,11 @@ ul.menu {
 
 .olaley {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
 }
 
 .img {
@@ -203,10 +215,6 @@ label {
     font-size:15px;
 }
 
-.texto:focus {
-    transform: translate(0, -3px);
-
-}
 
 .btn-new {
     transition: .2s;
@@ -216,40 +224,24 @@ label {
     background: #286fd8
 }
 
-.btn-new {
-    transition: .3s;
-}
-
 .btn-new:hover {
-    transform: translate(0, -3px);
+    background: #286fd0;
 }
 
 .text {
-    border: 2px solid BLACK;
-    border-radius: 4px;
-    height: 150px;
-    width: 300px;
-    transition: .3s;
-}
-
-.text:focus {
-    transform: translate(0, -3px);
-
-    .play-regular {
-        font-family: "Play", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-    }
-}
-
-.play-bold {
-    font-family: "Play", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-}
-img {
-width:400px;
-height:400px;
+    transition: 0.2s;
+    background: var(--graphite);
+    padding: 0.684rem 0.736rem 0.684rem 0.736rem;
+    border-radius: 0.263rem;
+    display: flex;
+    weight: 400px;
+    height: 400px;
+    font-size: 0.947rem;
+    color: var(--white);
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .game {

@@ -17,18 +17,12 @@
             <div class="flash {{cat}}">{{msg}}</div>
         {% endfor %}
         <form action="/tech" method="post" class="tech">
-            <p><label>
-                Ваше имя:
-                    <input class="texto" type="text" name="name" placeholder="Иван Иванов">
-            </label></p>
+            <p>
+                    <input class="texto" type="text" name="name" placeholder="Ваше имя"></p>
 
-            <p><label>
-                Электронная почта:
-                    <input class="texto" type="email" name="email" placeholder="example@email.com">
-            </label></p>
-            <p><label>
-                Опишите проблему:</label></p>
-                    <textarea class="text" name="comment" placeholder="Что случилось?"></textarea>
+            <p>
+                    <input class="texto" type="email" name="email" placeholder="Ваша почта"></p>
+                    <textarea class="text" name="comment" placeholder="Опишите проблему"></textarea>
 
             <p><button class="btn-new" type="submit"> Отправить </button></p>
         </form>
