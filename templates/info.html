@@ -12,7 +12,37 @@
     {% endblock hat %}
 
     {% block main %}
-        <h1>Как зайти на наш сервер?</h1>
+    <main class="main">
+            <section class="hero">
+                <div class="container container__aside">
+                    <div class="container__hero">
+                        <h1 class="title">Как начать играть?</h1>
+                        <h3>1. Зарегистрируйтесь</h3>
+                        <p>Наш проект использует собственную систему авторизации, это обязательное условие, чтобы начать играть на наших серверах.</p>
+                        <form action="/login"><p><input type="submit" value="Войти" class="btn-new"></p></form>
+
+                        <h3>2. Ознакомьтесь с правилами</h3>
+                        <p>При игре и общении в чатах проекта вы обязаны соблюдать правила.</p>
+                        <form action="/rule"><p><input type="submit" value="Войти" class="btn-new"></p></form>
+
+                        <h3>3. Скачайте и запустите Сборку</h3>
+                        <p>Для игры на наших серверах требуется наша собственная сборка.</p>
+                        <form action="/download"><p><input type="submit" value="Войти" class="btn-new"></p></form>
+                    </div>
+
+                    <div class="aside" >
+                        <p><img src="../static/img/reg.png" class="game"></p>
+
+                        <p><img src="../static/img/rule.png" class="game"></p>
+
+                        <p><img src="../static/img/down.png" class="game"></p>
+                    </div>
+                </div>
+            </section>
+            <section class="about">
+                <div class="container"></div>
+            </section>
+    </main>
     {% endblock %}
 
     {% block footer %}

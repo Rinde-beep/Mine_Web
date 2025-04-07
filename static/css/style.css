@@ -1,9 +1,11 @@
 * {
-    font-family: "Play", sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
     font-weight: 200px;
     font-style: normal;
     text-align: center;
+    font-color: white;
+    color: white
 }
 
 html {
@@ -31,7 +33,27 @@ a {
     padding: 0;
     list-style: none;
 }
-
+.box {
+display: flex;
+    flex-direction: column;
+    gap: 1.052rem;
+    width: 23.684rem;
+    height: auto;
+    padding: 2.105rem;
+    border: solid 1px;
+    border-radius: 0.578rem;
+}
+input {
+transition: 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--graphite);
+    padding: 0.684rem 0.736rem 0.684rem 0.736rem;
+    border-radius: 0.263rem;
+    display: block;
+    font-size: 0.947rem;
+    color: var(--white);
+}
 .btn {
     width: fit-content;
     height: fit-content;
@@ -100,7 +122,7 @@ ul.menu {
 
 .header {
     margin-bottom: 20px;
-    background-color: #007765;
+    background-color: #286fd8;
     height: 84px;
 
 }
@@ -120,6 +142,10 @@ ul.menu {
     max-width: 50%;
 }
 
+.olaley {
+    display: flex;
+}
+
 .img {
     width: 80px;
     height: 70px;
@@ -130,7 +156,7 @@ ul.menu {
 }
 
 .footer {
-    background-color: #007765;
+    background-color: #286fd8;
     height: 84px;
     bottom: 0;
     left: 0;
@@ -169,10 +195,10 @@ label {
 }
 
 .texto {
-    border: 2px solid BLACK;
+    border: 2px solid GRAY;
     border-radius: 4px;
-    height: 20px;
-    width: 150px;
+    height: 40px;
+    width: 300px;
     transition: .3s;
     font-size:15px;
 }
@@ -184,9 +210,10 @@ label {
 
 .btn-new {
     transition: .2s;
-    border-radius: 1em;
+    border-radius: 0.3em;
     width: 10em;
     height: 3em;
+    background: #286fd8
 }
 
 .btn-new {
@@ -223,4 +250,25 @@ label {
 img {
 width:400px;
 height:400px;
+}
+
+.game {
+width:200px;
+height:200px;
+}
+
+body {
+background-color: #191919;
+}
+
+.play-regular {
+  font-family: "Play", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.play-bold {
+  font-family: "Play", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }

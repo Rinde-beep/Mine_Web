@@ -4,8 +4,8 @@
 <head>
     {% block head %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Play:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/style.css">
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
     <title>{% block title %} Главная {% endblock %}</title>
 </head>
 
-<body>
+<body style="background-color: 4f555b">
 {% block hat %}
     <header class="header">
         <div class="container">
@@ -31,6 +31,9 @@
                     <li class="menu_item">
                         <a href="/login">Войти</a>
                     </li>
+                    <li class="menu_item">
+                        <a href="/rule">Правила</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -43,9 +46,14 @@
                 <div class="container__hero">
                     <h1 class="title">Добро пожаловать на сервер</h1>
                     <p>Незабываемые впечатления, которые вы можете разделить со своими друзьями </p>
+                    <div class="olaley">
+                        <form action="/info"><p><input type="submit" value="Начат играть" class="btn-new"></p></form>
+                        <form action="/download"><p><input type="submit" value="Скачать сборку" class="btn-new"></p></form>
+                    </div>
+
                 </div>
                 <div class="aside">
-                    <img src="https://preview.free3d.com/img/2016/07/2374218859876975984/skuo6ybq.jpg">
+                    <img src="">
                 </div>
             </div>
         </section>

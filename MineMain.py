@@ -5,8 +5,6 @@ import json
 print("Hello world!")
 app = Flask(__name__)
 
-
-
 app.config["SECRET_KEY"] = "SDFSFJDhfofsf"
 @app.route("/")
 def main():
@@ -16,6 +14,11 @@ def main():
 @app.route("/info")
 def info():
     return render_template("info.html")
+
+@app.route("/rule")
+def rule():
+    return render_template("rule.html")
+
 @app.route("/tech", methods=["POST", "GET"])
 def tech():
     if request.method == "POST":
