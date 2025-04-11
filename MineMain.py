@@ -1,11 +1,22 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect
 import requests
 import json
+import sqlite3
+from sqlalchemy.orm import as_declarative, Mapped, mapped_column, Session, sessionmaker, DeclarativeBase
+from sqlalchemy import URL, create_engine, text, MetaData, Column, Table, Integer, String, select, insert
+from Sqlalchemy import Users, session_factory
+
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+
+
 
 print("Hello world!")
 app = Flask(__name__)
-
 app.config["SECRET_KEY"] = "SDFSFJDhfofsf"
+
+
+
+
 @app.route("/")
 def main():
     fact = json.loads((requests.get("https://catfact.ninja/fact?max_length=40")).text)["fact"]
@@ -26,13 +37,40 @@ def tech():
             flash("Тикет отправлен", category='success')
         else:
             flash("Ошибка отправки", category='error')
-
     return render_template("tech.html")
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        flash("Неправильный логин или пароль", "error")
+        name = request.form.get("name")
+        passw = request.form.get("pass")
+        with session_factory() as ses:
+            check = ses.get(Users, name)
+        if check == passw:
+            flash("Check", 'success')
+        else:
+            flash("Неправильный логин или пароль", "error")
     return render_template("login.html")
 
+@app.route("/reg", methods=["POST", "GET"])
+def reg():
+    if request.method == "POST":
+        name = request.form.get("name")
+        passw = request.form.get("pass")
+        passw_again = request.form["pass_again"]
+        if passw == passw_again:
+            user = Users(user=name, password=passw)
+            with session_factory() as session:
+                session.add(user)
+                session.commit()
+                flash("Регистрация прошла успешно", "success")
+            return redirect("/login")
+        else:
+            flash("Пароли не совпадают", "error")
+    # except:
+    #     flash("Такой пользователь уже зарегистрирован", "error")
+    return render_template("reg.html")
+
 if __name__ == "__main__":
+    Users.metadata.create_all(engine)
     app.run()
