@@ -1,0 +1,34 @@
+{% extends "ind.html" %}
+    {% block head %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block title %}
+        Профиль
+    {% endblock %}
+
+    {% block hat %}
+        {{ super() }}
+    {% endblock hat %}
+
+    {% block main %}
+    <main class="main">
+            <section class="hero">
+                <div class="container container__aside">
+                    <div class="container__hero">
+                        <h1 class="title">Профиль {{ log }}</h1>
+                    </div>
+                    <div class="aside">
+                        <img src="https://preview.free3d.com/img/2016/07/2374218859876975984/skuo6ybq.jpg">
+                    </div>
+                </div>
+            </section>
+            <section class="about">
+                <div class="container"></div>
+            </section>
+    </main>
+    {% endblock %}
+
+    {% block footer %}
+        {{ super() }}
+    {% endblock %}
