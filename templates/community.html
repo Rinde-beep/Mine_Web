@@ -18,6 +18,18 @@
                     <div class="container__hero">
                         <h1 class="title">Сообщество</h1>
                         <a href="/post">+</a>
+                        {% for post in posts %}
+                            <div class="box">
+                                <p>{{ post[3] }}</p>
+                                {% if post[2] %}
+                                <p><img src="/getimg/{{post[0]}}"></p>
+                                {% endif %}
+                                {% if post[1] %}
+                                <p>{{ post[1] }}</p>
+                                {% endif %}
+                                <p><form action="/likes/{{post[0]}}"><input type="submit" value="{{post[4]}}"></form></p>
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="aside">
                         <img src="https://preview.free3d.com/img/2016/07/2374218859876975984/skuo6ybq.jpg">

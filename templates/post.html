@@ -18,9 +18,11 @@
                     <div class="container__hero">
                         <h1 class="title">Добавь свой пост</h1>
                         <form action="/upload" method="post" enctype="multipart/form-data">
-                            <p><input type="file" name="file"></p>
-                            <p><textarea name="textarea" class="text"></p>
-                            <p><input type="submit" value="Запостить" class="btn-new"></p></form>
+                            {{ form.hidden_tag() }}
+                            {{ form.image() }}
+                            {{ form.description() }}
+                            {{ form.submit() }}
+                        </form>
                     </div>
                     <div class="aside">
                     </div>

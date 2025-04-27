@@ -4,7 +4,6 @@
     font-weight: 200px;
     font-style: normal;
     text-align: center;
-    font-color: white;
     color: white
 }
 
@@ -169,14 +168,26 @@ ul.menu {
 
 .footer {
     background-color: #286fd8;
-    height: 84px;
+    height: 30%;
+    width:100%;
     bottom: 0;
-    left: 0;
     padding: 10px;
-    position: fixed;
-    right: 0;
     text-align: left;
     z-index: 99;
+    position: relative;
+}
+
+.footer {
+    margin-top: auto;
+    background-color: #286fd8;
+    padding: 10px;
+    text-align: left;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #191919;
 }
 
 label {
@@ -234,7 +245,6 @@ label {
     padding: 0.684rem 0.736rem 0.684rem 0.736rem;
     border-radius: 0.263rem;
     display: flex;
-    weight: 400px;
     height: 400px;
     font-size: 0.947rem;
     color: var(--white);

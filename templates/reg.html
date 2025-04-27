@@ -19,10 +19,11 @@
          {% endfor %}
       <form action="/reg" method="post" class="login">
          <div class="box">
-            <p><input maxlength="25" name="name" class="texto" placeholder="Ник"></p>
-            <p><input type="password" maxlength="25" name="pass" class="texto" placeholder="Пароль"></p>
-           <p><input type="password" maxlength="25" name="pass_again" class="texto" placeholder="Повтор пароля"></p>
-            <p><input type="submit" value="Регистрация" class="btn-new"></p>
+            {{ form.hidden_tag() }}
+            <p>{{ form.login() }}</p>
+            <p>{{ form.password() }}</p>
+            <p>{{ form.password_2}}</p>
+            <p>{{ form.submit() }}</p>
          </div>
 
       </form>
