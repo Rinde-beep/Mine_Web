@@ -4,7 +4,7 @@
     {% endblock %}
 
     {% block title %}
-        Профиль
+        Как играть
     {% endblock %}
 
     {% block hat %}
@@ -12,14 +12,12 @@
     {% endblock hat %}
 
     {% block main %}
-    {% for cat, msg in get_flashed_messages(True) %}
-            <div class="flash {{cat}}">{{msg}}</div>
-    {% endfor %}
     <main class="main">
             <section class="hero">
                 <div class="container container__aside">
                     <div class="container__hero">
-                        <h1 class="title">Профиль {{ log }}</h1>
+                        <h1 class="title">Сообщество</h1>
+                        <a href="/post">+</a>
                     </div>
                     <div class="aside">
                         <img src="https://preview.free3d.com/img/2016/07/2374218859876975984/skuo6ybq.jpg">
