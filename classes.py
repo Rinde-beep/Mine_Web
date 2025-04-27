@@ -2,12 +2,14 @@ from flask_login import LoginManager, UserMixin
 from database import select_orm, select_orm_equal
 from database import Users
 
-class UserLogin(UserMixin):
+class UserLogin:
     def get_name(self, id):
-        self.name = select_orm_equal(id, Users.id)
+        self.name = select_orm_equal(id, Users.user)
+        return self
 
     def create(self, name):
         self.name = name
+        return self
 
     def is_authenticated(self):
         return True
@@ -20,3 +22,6 @@ class UserLogin(UserMixin):
     
     def get_id(self):
         return str(select_orm(self.name, Users.id))
+    
+
+class 

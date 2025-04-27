@@ -1,17 +1,5 @@
 from flask import session, render_template, request
-
-
-def ch_session(ch):
-    session["login"] = ch
-
-def dl_session():
-    session.pop("login")
-
-def check():
-    if session.get('login', False) != False:
-        return True
-    else:
-        return False
+from flask_login import current_user
     
 def check_pass(password):
     spec = "!@#$%^&*"
@@ -47,22 +35,9 @@ def check_pass(password):
         return True, []
     else:
         return False, [x for x in check.keys() if check[x] == False]
-    check["Хотя бы одна заглавная буква"] = True
 
-def render_session(url, log=None, gam=None):
-    if check():
-        if log:
-            if gam:
-                return render_template(url, name=f"/profile/{session['login']}", log=log, gam=gam)
-            else:
-                return render_template(url, name=f"/profile/{session['login']}", log=log)
-        else:
-            return render_template(url, name=f"/profile/{session['login']}")
-    else:
-        return render_template(url, name="/login")
-    
 def check_tech():
-    if not check():
+    if not current_user.is_authenticated:
         return False, "Зарегистрируйтесь, чтобы отправить"
     
     elif not request.form.get("comment"):
