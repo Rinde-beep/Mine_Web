@@ -16,18 +16,16 @@
             <section class="hero">
                 <div class="container container__aside">
                     <div class="container__hero">
-                        {% for cat, msg in get_flashed_messages(True) %}
-            <div class="flash {{cat}}">{{msg}}</div>
-            {% endfor %}
-                        <h1 class="title">Добавь свой пост</h1>
-                        <form action="/upload" method="post" enctype="multipart/form-data">
-                            {{ form.hidden_tag() }}
-                            {{ form.image() }}
-                            {{ form.description() }}
-                            {{ form.submit() }}
-                        </form>
+                        <h1>Скачать сборку для нашего сервера</h1>
+                        <p>Ccылка на яндекс диск:
+                            <a href="">Сборка</a>
+                        </p>
+                        <p>Ссылка на скачивание
+                            <a href="">Cборка</a>
+                        </p>
                     </div>
                     <div class="aside">
+                        <img src="" width="500" height="250">
                     </div>
                 </div>
             </section>

@@ -20,10 +20,10 @@
       <form action="/reg" method="post" class="login">
          <div class="box">
             {{ form.hidden_tag() }}
-            <p>{{ form.login() }}</p>
-            <p>{{ form.password() }}</p>
-            <p>{{ form.password_2}}</p>
-            <p>{{ form.submit() }}</p>
+            <p>{{ form.login(class="texto", placeholder="Никнейм") }}</p>
+            <p>{{ form.password(class="texto", placeholder="Пароль") }}</p>
+            <p>{{ form.password_2(class="texto", placeholder="Повтор пароля")}}</p>
+            <p>{{ form.submit(class="btn-new") }}</p>
          </div>
 
       </form>

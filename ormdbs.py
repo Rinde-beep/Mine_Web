@@ -1,12 +1,19 @@
 from flask_login import current_user
 from sqlalchemy import BLOB, create_engine, select
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
-engine = create_engine("sqlite+pysqlite:///user.db", echo=True)
+import asyncio
+from config import settings
+from typing import Optional
+
+
+
+engine = create_engine("sqlite:///:user.db", echo=True)
 
 session_factory = sessionmaker(engine)
 
-engine_post = create_engine("sqlite+pysqlite:///post.db", echo=True)
+engine_post = create_engine("sqlite:///:post.db", echo=True)
 
 session_factory_post = sessionmaker(engine_post)
 
@@ -34,51 +41,52 @@ class Posts(Base):
     likes: Mapped[int] = mapped_column(default=0)
     liked: Mapped[str] = mapped_column(default="")
 
-def create_db():
-    Users.metadata.create_all(engine)
-    Posts.metadata.create_all(engine_post)
 
-def insert_orm_user(name, password):
+def create_db() -> None:
+    Posts.metadata.create_all(engine_post)
+    Users.metadata.create_all(engine)
+
+def insert_orm_user(name: str, password: str) -> None:
     with session_factory() as ses:
         user = Users(user=name, password=password)
         ses.add(user)
         ses.commit()
 
-def insert_orm_post(post, user, image=None):
+def insert_orm_post(post: str, user: str, image: Optional[BLOB] = None) -> None:
     with session_factory_post() as ses:
         post = Posts(post=post, imag=image, user=user,)
         ses.add(post)
         ses.commit()
 
-def select_posts():
+def select_posts() -> None:
     with engine_post.connect() as conn:
         check = conn.execute(select(Posts).limit(10)).all()
     return reversed(check)
 
-def get_image(id):
+def get_image(id: int) -> BLOB:
     with engine_post.connect() as conn:
         check = conn.execute(select(Posts.imag).where(Posts.id == id)).scalar()
     return check
     
-def update_likes(id):
+def update_likes(id: int) -> None:
     with session_factory_post() as ses:
         post = ses.get(Posts, id)
         post.likes += 1
         ses.commit()
 
-def update_dislikes(id):
+def update_dislikes(id: int) -> None:
     with session_factory_post() as ses:
         post = ses.get(Posts, id)
         post.likes -= 1
         ses.commit()
 
-def update_liked(id):
+def update_liked(id: int) -> None:
     with session_factory_post() as ses:
         post = ses.get(Posts, id)
         post.liked += f";{current_user.name}"
         ses.commit()
 
-def update_disliked(id):
+def update_disliked(id: int) -> None:
     with session_factory_post() as ses:
         post = ses.get(Posts, id)
         liked = post.liked.split(";")
@@ -86,25 +94,21 @@ def update_disliked(id):
         post.liked = ";".join(liked)
         ses.commit()
 
-def get_liked(id):
+def get_liked(id: int) -> None:
     with session_factory_post() as ses:
         check = ses.get(Posts, id)
-        
     return check.liked
 
-
-
-def select_orm(name, what):
+def select_from_orm(name: str, what: classmethod) -> int | str:
     with engine.connect() as conn:
         check = conn.execute(select(what).where(Users.user == name)).scalar()
     return check
 
-def select_orm_equal(id, what):
+def select_orm_equal(id: int, what: classmethod) -> str:
     with engine.connect() as conn:
         check = conn.execute(select(what).where(Users.id == id)).scalar()
     return check
 
 
 if __name__ == "__main__":
-    insert_orm_user("Rinde", "123")
-    select_orm(Users.id, "rinde")
+    select_posts()

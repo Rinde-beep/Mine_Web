@@ -20,9 +20,9 @@
       <form action="/login" method="post" class="login">
          <div class="box">
             {{ form.hidden_tag() }}
-            <p>{{ form.login() }}</p>
-            <p>{{ form.password() }}</p>
-            <p>{{form.submit() }}</p>
+            <p>{{ form.login(class="texto", placeholder="Никнейм") }}</p>
+            <p>{{ form.password(class="texto", placeholder="Пароль") }}</p>
+            <p>{{form.submit(class="btn-new") }}</p>
             <p><a href="/reg">Нет аккаунта? Зарегистрируй!</a></p>
          </div>
 

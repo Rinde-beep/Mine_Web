@@ -16,15 +16,18 @@
         {% for cat, msg in get_flashed_messages(True) %}
             <div class="flash {{cat}}">{{msg}}</div>
         {% endfor %}
-        <form action="/tech" method="post" class="tech">
-            <p>
-                    <input class="texto" type="text" name="name" placeholder="Ваше имя"></p>
-
-            <p>
-                    <input class="texto" type="email" name="email" placeholder="Ваша почта"></p>
-                    <textarea class="text" name="comment" placeholder="Опишите проблему"></textarea>
-
-            <p><button class="btn-new" type="submit"> Отправить </button></p>
+        <form action="/tech" method="post" class="login">
+        {{ form.hidden_tag() }}
+        <p>
+        {{ form.login(class="texto", placeholder="Ваше имя") }}
+        </p>
+        <p>
+        {{ form.email(class="texto", placeholder="Ваша почта") }}
+        </p>
+        <p>
+        {{ form.textarea(class="text", placeholder="Опишите проблему") }}
+        </p>
+        {{ form.submit(class="btn-new") }}
         </form>
     {% endblock %}
 
