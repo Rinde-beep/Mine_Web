@@ -1,6 +1,7 @@
 import sqlite3
 import asyncio
 import logging
+import sys
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardRemove, ReplyKeyboardMarkup
 from aiogram.enums import ParseMode
@@ -52,7 +53,10 @@ balance_keyboard = [[KeyboardButton(text='300 руб.'), KeyboardButton(text='50
 
 # главная таблица
 main_keyboard = [[KeyboardButton(text='/help'), KeyboardButton(text='/donate')],
-                 [KeyboardButton(text='/balance'), KeyboardButton(text='/add_balance')]]
+                 [KeyboardButton(text='/balance'), KeyboardButton(text='/add_balance')],
+                 [KeyboardButton(text='/info'), KeyboardButton(text='/change_password')],
+                 [KeyboardButton(text='/stop')]
+                 ]
 
 mk = ReplyKeyboardMarkup(keyboard=main_keyboard, resize_keyboard=True, one_time_keyboard=False)
 bk = ReplyKeyboardMarkup(keyboard=balance_keyboard, resize_keyboard=True, one_time_keyboard=False)
@@ -66,11 +70,17 @@ class Register(StatesGroup):
     password = State()
 
 
+class ChangePassword(StatesGroup):
+    old_password = State()
+    new_password = State()
+
+
 class Login(StatesGroup):
     username = State()
     password = State()
 
 
+# проверка пароля для логина
 def check_password(passwd: str):
     if passwd.startswith("/"):
         return
@@ -108,6 +118,7 @@ def check_password(passwd: str):
     return True, ""
 
 
+# команда для начала работы
 @dp.message(Command("start") or Command('старт'))
 async def start_cmd(message: Message, state: FSMContext):
     photo = types.FSInputFile("static/img/minecraft.png")
@@ -121,6 +132,7 @@ async def start_cmd(message: Message, state: FSMContext):
     await state.clear()
 
 
+# начало регистрации
 @dp.message(Command("registration"))
 async def registration_start(message: Message, state: FSMContext):
     await state.clear()
@@ -128,6 +140,7 @@ async def registration_start(message: Message, state: FSMContext):
     await state.set_state(Register.username)
 
 
+# проверка логина при регистрации
 @dp.message(Register.username)
 async def registration_username(message: Message, state: FSMContext):
     if message.text.startswith("/"):
@@ -137,6 +150,9 @@ async def registration_username(message: Message, state: FSMContext):
         elif message.text == '/balance':
             await state.clear()
             await balance(message)
+        elif message.text == '/stop':
+            await state.clear()
+            await stop(message)
         elif message.text == '/login':
             await state.clear()
             await login_start(message, state)
@@ -145,6 +161,9 @@ async def registration_username(message: Message, state: FSMContext):
             await add_balance_command(message)
         elif message.text == '/info':
             await state.clear()
+        elif message.text == '/change_password':
+            await state.clear()
+            await change_password(message, state)
             await info_command(message)
         elif message.text == '/donate':
             await state.clear()
@@ -169,6 +188,7 @@ async def registration_username(message: Message, state: FSMContext):
     await state.set_state(Register.password)
 
 
+# проверка пароля при регистрации
 @dp.message(Register.password)
 async def registration_password(message: Message, state: FSMContext):
     if message.text.startswith("/"):
@@ -200,6 +220,7 @@ async def registration_password(message: Message, state: FSMContext):
     await state.clear()
 
 
+# вход в аккаунт (тоже самое, что и регистрация, только работа с бд
 @dp.message(Command("login"))
 async def login_start(message: Message, state: FSMContext):
     print('nen')
@@ -217,9 +238,15 @@ async def login_username(message: Message, state: FSMContext):
         elif message.text == '/balance':
             await state.clear()
             await balance(message)
+        elif message.text == '/stop':
+            await state.clear()
+            await stop(message)
         elif message.text == '/registration':
             await state.clear()
             await registration_start(message, state)
+        elif message.text == '/change_password':
+            await state.clear()
+            await change_password(message, state)
         elif message.text == '/add_balance':
             await state.clear()
             await add_balance_command(message)
@@ -267,6 +294,7 @@ async def login_password(message: Message, state: FSMContext):
     await state.clear()
 
 
+# помощь по всем командам
 @dp.message(Command("help"))
 async def help(message: Message):
     await message.answer('Вам доступны команды:\n'
@@ -276,9 +304,12 @@ async def help(message: Message):
                          '/balance - проверка баланса,\n'
                          '/add_balance - пополнение баланса,\n'
                          '/donate - покупка доната,\n'
-                         '/info - полная информация об игроке.')
+                         '/info - полная информация об игроке,\n'
+                         '/stop - выключает бота,\n'
+                         '/change_password - смена пароля.')
 
 
+# проверка баланса
 @dp.message(Command('balance'))
 async def balance(message: Message):
     if not name:
@@ -296,6 +327,7 @@ async def balance(message: Message):
                              'Попробуйте еще раз.')
 
 
+# пополнение баланса
 @dp.message(Command("add_balance"))
 async def add_balance_command(message: types.Message, state: FSMContext):
     if not name:
@@ -305,11 +337,7 @@ async def add_balance_command(message: types.Message, state: FSMContext):
     await state.set_state("choosing_balance")
 
 
-@dp.message(Command("main"))
-async def main(message: Message):
-    await message.answer("Возвращаемся в главное меню...", reply_markup=mk)
-
-
+# работа с бд
 @dp.message(lambda message: message.text in ["300 руб.", "500 руб.", "1200 руб.", "4000 руб."])
 async def process_balance_choice(message: types.Message, state: FSMContext):
     if not name:
@@ -328,6 +356,13 @@ async def process_balance_choice(message: types.Message, state: FSMContext):
     await state.clear()
 
 
+# возврат на главное меню
+@dp.message(Command("main"))
+async def main(message: Message):
+    await message.answer("Возвращаемся в главное меню...", reply_markup=mk)
+
+
+# покупка доната
 @dp.message(Command("donate"))
 async def donate_command(message: types.Message):
     if not name:
@@ -393,6 +428,7 @@ async def process_donation(message: types.Message):
     )
 
 
+# полная информация об игроке
 @dp.message(Command("info"))
 async def info_command(message: types.Message):
     if not name:
@@ -401,7 +437,6 @@ async def info_command(message: types.Message):
     conn = sqlite3.connect("user.db")
     cursor = conn.cursor()
 
-    # Получаем id доната пользователя
     cursor.execute("SELECT donate FROM user WHERE user = ?", (name,))
     row = cursor.fetchone()
     donate_id = row[0]
@@ -414,6 +449,68 @@ async def info_command(message: types.Message):
                          f'✨Уровень доната: <b>{donate_name[0]}</b>')
 
 
+# команда остановить работу
+@dp.message(Command("stop"))
+async def stop(message: types.Message):
+    await message.answer('🛑 Бот остановлен!', reply_markup=ReplyKeyboardRemove())
+    await bot.session.close()
+    await bot.close()
+    await dp.storage.close()
+    await dp.fsm.storage.close()
+
+
+# смена пароля
+@dp.message(Command("change_password"))
+async def change_password(message: Message, state: FSMContext):
+    if not name:
+        await message.answer('❌ Сначала войдите в аккаунт с помощью /login.')
+        return
+    await message.answer('Введите старый пароль:')
+    await state.set_state(ChangePassword.old_password)
+
+
+@dp.message(ChangePassword.old_password)
+async def check_old_password(message: Message, state: FSMContext):
+    if message.text.startswith("/"):
+        await state.clear()
+        return
+    old_password = message.text.strip()
+
+    if password == old_password:
+        await message.answer("Введите новый пароль (мин. 8 символов, заглавная буква, цифра, спец. символ):")
+        await state.set_state(ChangePassword.new_password)
+    else:
+        await message.answer("❌ Неверный текущий пароль.")
+        await state.clear()
+
+
+@dp.message(ChangePassword.new_password)
+async def set_new_password(message: Message, state: FSMContext):
+    if message.text.startswith("/"):
+        await state.clear()
+        return
+
+    new_pass = message.text.strip()
+    status_TF, why = check_password(new_pass)
+    if not status_TF:
+        await message.answer(f"❌ {why}")
+        return
+
+    hashed = generate_password_hash(new_pass)
+    conn = sqlite3.connect("user.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE user SET password = ? WHERE user = ?", (hashed, name))
+    conn.commit()
+    conn.close()
+
+    global password
+    password = new_pass
+
+    await message.answer("✅ Пароль успешно изменён!")
+    await state.clear()
+
+
+# начало работы
 async def main_start():
     await dp.start_polling(bot)
 
