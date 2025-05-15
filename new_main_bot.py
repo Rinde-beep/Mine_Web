@@ -131,9 +131,24 @@ async def registration_start(message: Message, state: FSMContext):
 @dp.message(Register.username)
 async def registration_username(message: Message, state: FSMContext):
     if message.text.startswith("/"):
-        await state.clear()
-        await login_start(message, state)
-
+        if message.text == '/help':
+            await state.clear()
+            await help(message)
+        elif message.text == '/balance':
+            await state.clear()
+            await balance(message)
+        elif message.text == '/login':
+            await state.clear()
+            await login_start(message, state)
+        elif message.text == '/add_balance':
+            await state.clear()
+            await add_balance_command(message)
+        elif message.text == '/info':
+            await state.clear()
+            await info_command(message)
+        elif message.text == '/donate':
+            await state.clear()
+            await donate_command(message)
         return
     username = message.text.strip()
     if not (2 <= len(username) <= 10):
@@ -172,7 +187,8 @@ async def registration_password(message: Message, state: FSMContext):
 
     conn = sqlite3.connect("user.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO user (user, password, balance) VALUES (?, ?, ?)", (username, hashed_password, 0))
+    cursor.execute("INSERT INTO user (user, password, balance, donate) VALUES (?, ?, ?, ?)",
+                   (username, hashed_password, 0, 1))
     conn.commit()
     conn.close()
 
@@ -195,7 +211,24 @@ async def login_start(message: Message, state: FSMContext):
 @dp.message(Login.username)
 async def login_username(message: Message, state: FSMContext):
     if message.text.startswith("/"):
-        await state.clear()
+        if message.text == '/help':
+            await state.clear()
+            await help(message)
+        elif message.text == '/balance':
+            await state.clear()
+            await balance(message)
+        elif message.text == '/registration':
+            await state.clear()
+            await registration_start(message, state)
+        elif message.text == '/add_balance':
+            await state.clear()
+            await add_balance_command(message)
+        elif message.text == '/info':
+            await state.clear()
+            await info_command(message)
+        elif message.text == '/donate':
+            await state.clear()
+            await donate_command(message)
         return
     await state.update_data(username=message.text.strip())
     await message.answer("Введите пароль:")
@@ -236,9 +269,6 @@ async def login_password(message: Message, state: FSMContext):
 
 @dp.message(Command("help"))
 async def help(message: Message):
-    if not name:
-        await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
-        return
     await message.answer('Вам доступны команды:\n'
                          '/start - начинает весь процес с нуля,\n'
                          '/login - начало входа в аккаунт,\n'
@@ -268,6 +298,9 @@ async def balance(message: Message):
 
 @dp.message(Command("add_balance"))
 async def add_balance_command(message: types.Message, state: FSMContext):
+    if not name:
+        await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
+        return
     await message.answer("💰 Выберите сумму для пополнения:", reply_markup=bk)
     await state.set_state("choosing_balance")
 
@@ -297,6 +330,9 @@ async def process_balance_choice(message: types.Message, state: FSMContext):
 
 @dp.message(Command("donate"))
 async def donate_command(message: types.Message):
+    if not name:
+        await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
+        return
     await message.answer("💎 Выберите донат:", reply_markup=dk)
 
 
@@ -355,6 +391,27 @@ async def process_donation(message: types.Message):
         f"Спасибо за покупку!\nВы приобрели донат: <b>{item.split(' -')[0]}</b>.\nНовый баланс: {current_balance - price} руб.",
         reply_markup=mk
     )
+
+
+@dp.message(Command("info"))
+async def info_command(message: types.Message):
+    if not name:
+        await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
+        return
+    conn = sqlite3.connect("user.db")
+    cursor = conn.cursor()
+
+    # Получаем id доната пользователя
+    cursor.execute("SELECT donate FROM user WHERE user = ?", (name,))
+    row = cursor.fetchone()
+    donate_id = row[0]
+    cursor.execute("SELECT name FROM donate WHERE id = ?", (donate_id,))
+    donate_name = cursor.fetchone()
+    conn.close()
+    await message.answer(f'💎Информация об аккаунте: \n'
+                         f'👤Имя: <b>{name}</b>\n'
+                         f'🔑Пароль: <b>{password}</b>\n'
+                         f'✨Уровень доната: <b>{donate_name[0]}</b>')
 
 
 async def main_start():
