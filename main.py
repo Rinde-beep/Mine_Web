@@ -4,7 +4,8 @@ import json
 import sqlite3
 import asyncio
 import sqlalchemy
-from ormdbs import get_image, get_liked, insert_orm_user, select_from_orm, create_db, select_posts, update_disliked, update_dislikes, update_liked, update_likes, Users, insert_orm_post
+from ormdbs import get_image, get_liked, insert_orm_user, select_from_orm, create_db, select_posts,\
+update_disliked, update_dislikes, update_liked, update_likes, Users, insert_orm_post
 from werkzeug.security import generate_password_hash, check_password_hash
 from checks_and_session import check_pass, check_tech, check_name, check_file
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user

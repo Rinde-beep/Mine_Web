@@ -182,7 +182,7 @@ async def registration_username(message: Message, state: FSMContext):
         await message.answer("Логин должен быть от 2 до 10 символов.")
         return
 
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM user WHERE user = ?", (username,))
     if cursor.fetchone():
@@ -213,10 +213,10 @@ async def registration_password(message: Message, state: FSMContext):
     username = data["username"]
     hashed_password = generate_password_hash(passwd)
 
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO user (user, password, balance, donate) VALUES (?, ?, ?, ?)",
-                   (username, hashed_password, 0, 1))
+    cursor.execute("INSERT INTO user (user, password) VALUES (?, ?)",
+                   (username, hashed_password))
     conn.commit()
     conn.close()
 
@@ -280,7 +280,7 @@ async def login_password(message: Message, state: FSMContext):
     data = await state.get_data()
     user_login = data["username"]
 
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
     cursor.execute("SELECT password FROM user WHERE user = ?", (user_login,))
     row = cursor.fetchone()
@@ -324,7 +324,7 @@ async def balance(message: Message):
         await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
         return
     try:
-        conn = sqlite3.connect("user.db")
+        conn = sqlite3.connect(":user.db")
         cursor = conn.cursor()
         money = cursor.execute("SELECT balance FROM user WHERE user = ?", (name,)).fetchone()
         print(money)
@@ -354,7 +354,7 @@ async def process_balance_choice(message: types.Message, state: FSMContext):
 
     money = int(message.text.split()[0])
 
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
     cursor.execute("UPDATE user SET balance = balance + ? WHERE user = ?", (money, name))
     conn.commit()
@@ -389,7 +389,7 @@ async def process_donation(message: types.Message):
     price = donate_options[item]
     donate_name = item.split(" -")[0]
 
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
 
     # Получаем текущий баланс
@@ -408,21 +408,21 @@ async def process_donation(message: types.Message):
 
     # Проверка: если уже такой донат
     if current_donate == donate_id:
-        await message.answer(f"⚠️ У вас уже есть донат <b>{donate_name}</b>.")
+        await message.answer(f"⚠️ У вас уже есть донат <b>{donate_id}</b>.")
         conn.close()
         return
     if donate_names[current_donate] > donate_names[donate_id]:
-        cursor.execute("SELECT name FROM donate WHERE id = ?", (current_donate,))
-        current_donate_name = cursor.fetchone()[0]
+        
+        current_donate_name = current_donate
         await message.answer(
             f"⚠️ У вас уже есть более высокий донат: <b>{current_donate_name}</b>.\n"
-            f"Вы не можете купить <b>{donate_name}</b>."
+            f"Вы не можете купить <b>{donate_id}</b>."
         )
         conn.close()
         return
     # Обновляем баланс и назначаем донат
     cursor.execute(
-        "UPDATE user SET balance = balance - ?, donate = ? WHERE user = ?",
+        "UPDATE user SET balance = balance - ?, status = ? WHERE user = ?",
         (price, donate_id, name)
     )
     conn.commit()
@@ -440,7 +440,7 @@ async def info_command(message: types.Message):
     if not name:
         await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
         return
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
 
     cursor.execute("SELECT donate FROM user WHERE user = ?", (name,))
@@ -456,10 +456,12 @@ async def info_command(message: types.Message):
 @dp.message(Command("stop"))
 async def stop(message: types.Message):
     await message.answer('🛑 Бот остановлен!', reply_markup=ReplyKeyboardRemove())
+    sys.exit()
     await bot.session.close()
     await bot.close()
     await dp.storage.close()
     await dp.fsm.storage.close()
+    
 
 
 # смена пароля
@@ -500,7 +502,7 @@ async def set_new_password(message: Message, state: FSMContext):
         return
 
     hashed = generate_password_hash(new_pass)
-    conn = sqlite3.connect("user.db")
+    conn = sqlite3.connect(":user.db")
     cursor = conn.cursor()
     cursor.execute("UPDATE user SET password = ? WHERE user = ?", (hashed, name))
     conn.commit()

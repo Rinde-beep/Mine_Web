@@ -5,8 +5,6 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 import asyncio
-import classes
-from config import settings
 from typing import Optional
 
 
@@ -37,11 +35,6 @@ class Posts(Base):
     user: Mapped[str] = mapped_column()
     likes: Mapped[int] = mapped_column(default=0)
     liked: Mapped[str] = mapped_column(default="")
-
-class Donate(Base):
-    __tablename__ = "donate"
-
-    name: Mapped[str] = mapped_column()
 
 
 def create_db() -> None:
