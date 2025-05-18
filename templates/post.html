@@ -23,8 +23,8 @@
                         <form action="/upload" method="post" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
                             {{ form.image() }}
-                            {{ form.description() }}
-                            {{ form.submit() }}
+                            {{ form.description(class="texto") }}
+                            {{ form.submit(class="btn-new") }}
                         </form>
                     </div>
                     <div class="aside">

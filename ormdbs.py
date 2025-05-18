@@ -29,6 +29,7 @@ class Users(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column()
+    balance: Mapped[int] = mapped_column(default=0)
 
 class Posts(Base):
     __tablename__ = "post"
