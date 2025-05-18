@@ -1,10 +1,11 @@
 from calendar import c
 from flask_login import current_user
-from sqlalchemy import BLOB, create_engine, select
+from sqlalchemy import BLOB, create_engine, select, table, update
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 import asyncio
+import classes
 from config import settings
 from typing import Optional
 
@@ -26,7 +27,7 @@ class Users(Base):
     user: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column()
     balance: Mapped[int] = mapped_column(default=0)
-    status: Mapped[str] = mapped_column(default="раб")
+    status: Mapped[str] = mapped_column(default="Раб")
 
 class Posts(Base):
     __tablename__ = "post"
@@ -37,6 +38,10 @@ class Posts(Base):
     likes: Mapped[int] = mapped_column(default=0)
     liked: Mapped[str] = mapped_column(default="")
 
+class Donate(Base):
+    __tablename__ = "donate"
+
+    name: Mapped[str] = mapped_column()
 
 
 def create_db() -> None:
@@ -105,6 +110,11 @@ def select_orm_equal(id: int, what: classmethod) -> str:
         check = conn.execute(select(what).where(Users.id == id)).scalar()
     return check
 
+def update_orm_user(name: str, values: int):
+    with engine.connect() as conn:
+        check = conn.execute(update(Users).where(Users.user == name).values(balance=values))
+
 
 if __name__ == "__main__":
+    
     select_posts()
