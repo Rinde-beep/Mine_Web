@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 name = None
 password = None
 balance = 0
+
 donate_options = {
     "Воин - 200 руб.": 200,
     "Офицер - 500 руб.": 500,
@@ -63,7 +64,6 @@ balance_keyboard = [[KeyboardButton(text='300 руб.'), KeyboardButton(text='50
 main_keyboard = [[KeyboardButton(text='/help'), KeyboardButton(text='/donate')],
                  [KeyboardButton(text='/balance'), KeyboardButton(text='/add_balance')],
                  [KeyboardButton(text='/info'), KeyboardButton(text='/change_password')],
-                 [KeyboardButton(text='/stop')]
                  ]
 
 mk = ReplyKeyboardMarkup(keyboard=main_keyboard, resize_keyboard=True, one_time_keyboard=False)
@@ -158,9 +158,6 @@ async def registration_username(message: Message, state: FSMContext):
         elif message.text == '/balance':
             await state.clear()
             await balance(message)
-        elif message.text == '/stop':
-            await state.clear()
-            await stop(message)
         elif message.text == '/login':
             await state.clear()
             await login_start(message, state)
@@ -182,7 +179,7 @@ async def registration_username(message: Message, state: FSMContext):
         await message.answer("Логин должен быть от 2 до 10 символов.")
         return
 
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM user WHERE user = ?", (username,))
     if cursor.fetchone():
@@ -213,10 +210,10 @@ async def registration_password(message: Message, state: FSMContext):
     username = data["username"]
     hashed_password = generate_password_hash(passwd)
 
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO user (user, password) VALUES (?, ?)",
-                   (username, hashed_password))
+    cursor.execute("INSERT INTO user (user, password, status, balance) VALUES (?, ?, ?, ?)",
+                   (username, hashed_password, 'Раб', 0))
     conn.commit()
     conn.close()
 
@@ -246,9 +243,6 @@ async def login_username(message: Message, state: FSMContext):
         elif message.text == '/balance':
             await state.clear()
             await balance(message)
-        elif message.text == '/stop':
-            await state.clear()
-            await stop(message)
         elif message.text == '/registration':
             await state.clear()
             await registration_start(message, state)
@@ -280,7 +274,7 @@ async def login_password(message: Message, state: FSMContext):
     data = await state.get_data()
     user_login = data["username"]
 
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
     cursor.execute("SELECT password FROM user WHERE user = ?", (user_login,))
     row = cursor.fetchone()
@@ -324,7 +318,7 @@ async def balance(message: Message):
         await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
         return
     try:
-        conn = sqlite3.connect(":user.db")
+        conn = sqlite3.connect("_user.db")
         cursor = conn.cursor()
         money = cursor.execute("SELECT balance FROM user WHERE user = ?", (name,)).fetchone()
         print(money)
@@ -354,7 +348,7 @@ async def process_balance_choice(message: types.Message, state: FSMContext):
 
     money = int(message.text.split()[0])
 
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
     cursor.execute("UPDATE user SET balance = balance + ? WHERE user = ?", (money, name))
     conn.commit()
@@ -389,7 +383,7 @@ async def process_donation(message: types.Message):
     price = donate_options[item]
     donate_name = item.split(" -")[0]
 
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
 
     # Получаем текущий баланс
@@ -412,7 +406,6 @@ async def process_donation(message: types.Message):
         conn.close()
         return
     if donate_names[current_donate] > donate_names[donate_id]:
-        
         current_donate_name = current_donate
         await message.answer(
             f"⚠️ У вас уже есть более высокий донат: <b>{current_donate_name}</b>.\n"
@@ -440,28 +433,16 @@ async def info_command(message: types.Message):
     if not name:
         await message.answer("⚠️ Вы не авторизованы. Войдите или зарегистрируйте аккаунт.")
         return
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT donate FROM user WHERE user = ?", (name,))
+    cursor.execute("SELECT status FROM user WHERE user = ?", (name,))
     donate_name = cursor.fetchone()[0]
     conn.close()
     await message.answer(f'💎Информация об аккаунте: \n'
                          f'👤Имя: <b>{name}</b>\n'
                          f'🔑Пароль: <b>{password}</b>\n'
-                         f'✨Уровень доната: <b>{donate_name[0]}</b>')
-
-
-# команда остановить работу
-@dp.message(Command("stop"))
-async def stop(message: types.Message):
-    await message.answer('🛑 Бот остановлен!', reply_markup=ReplyKeyboardRemove())
-    sys.exit()
-    await bot.session.close()
-    await bot.close()
-    await dp.storage.close()
-    await dp.fsm.storage.close()
-    
+                         f'✨Уровень доната: <b>{donate_name}</b>')
 
 
 # смена пароля
@@ -502,7 +483,7 @@ async def set_new_password(message: Message, state: FSMContext):
         return
 
     hashed = generate_password_hash(new_pass)
-    conn = sqlite3.connect(":user.db")
+    conn = sqlite3.connect("_user.db")
     cursor = conn.cursor()
     cursor.execute("UPDATE user SET password = ? WHERE user = ?", (hashed, name))
     conn.commit()
