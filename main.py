@@ -82,7 +82,7 @@ def reg() -> Response:
         passw = form.password.data
         passw_again = form.password_2.data
         print(name, passw)
-        if  check_pass(passw)[0] and check_name(name)[0]:
+        if check_pass(passw)[0] and check_name(name)[0]:
             if passw == passw_again:
                 try:
                     insert_orm_user(name, generate_password_hash(passw))
@@ -104,7 +104,8 @@ def reg() -> Response:
 @login_required
 def profile() -> Response:
     balance = select_from_orm(current_user.name, Users.balance)
-    return render_template("profile.html", log=current_user.name, balance=balance)
+    status = select_from_orm(current_user.name, Users.status)
+    return render_template("profile.html", log=current_user.name, balance=balance, status=status)
 
 @app.route("/signout")
 def signout() -> Response:
