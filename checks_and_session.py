@@ -50,21 +50,24 @@ def check_name(name: str) -> tuple[bool, str]:
         return False, "Имя не должно быть пустым"
     
 def check_file(file: str, allowed: tuple[str, ...]) -> tuple[bool, list[str]]:
-    check = {}
-    print(len(file))
-    if file.rsplit(".", 1)[1] == "png":
-        check["Файл должен быть расширения .png"] = True
-    else:
-        check["Файл должен быть расширения .png"] = False
+    if file:
+        check = {}
+        print(len(file))
+        if file.rsplit(".", 1)[1] == "png":
+            check["Файл должен быть расширения .png"] = True
+        else:
+            check["Файл должен быть расширения .png"] = False
 
-    if len(file) <= 20:
-        check["Файл слишком большой"] = True
+        if len(file) <= 20:
+            check["Файл слишком большой"] = True
+        else:
+            check["Файл слишком большой"] = False
+        if all([x for x in check.values()]):
+            return True, []
+        else:
+            return False, [x for x in check.keys() if check[x] == False]
     else:
-        check["Файл слишком большой"] = False
-    if all([x for x in check.values()]):
-        return True, []
-    else:
-        return False, [x for x in check.keys() if check[x] == False]
+        return True, ""
 
 def check_tech(ticket: str) -> tuple[bool, str]:
     if not current_user.is_authenticated:

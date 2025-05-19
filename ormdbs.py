@@ -9,19 +9,19 @@ from typing import Optional
 
 
 
-engine = create_engine("sqlite:///:user.db", echo=True)
+engine = create_engine("sqlite:///user.db", echo=True)
 
 session_factory = sessionmaker(engine)
 
 
 
 class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-
+    pass
 
 class Users(Base):
     __tablename__ = "user"
 
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column()
     balance: Mapped[int] = mapped_column(default=0)
@@ -30,6 +30,7 @@ class Users(Base):
 class Posts(Base):
     __tablename__ = "post"
 
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     post: Mapped[str] = mapped_column()
     imag = mapped_column(BLOB)
     user: Mapped[str] = mapped_column()
